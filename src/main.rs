@@ -8,7 +8,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let iroha_client: Client = Client::new(&config)?;
 
     initiate_block_listener(&iroha_client, 1);
-
+//123
     Ok(())
 }
 // Auxiliary method for a block listener
