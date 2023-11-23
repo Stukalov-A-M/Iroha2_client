@@ -39,4 +39,3 @@ fn initiate_block_listener(iroha_client :&Client, initial_block_number: u64) {
         }
     }
 }
-
