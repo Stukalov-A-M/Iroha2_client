@@ -1,9 +1,12 @@
 mod config;
+
+use crate::config::get_config_path;
 use iroha_client::client::Client;
+use std::error::Error;
 use std::num::NonZeroU64;
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = config::get_config();
+fn main() -> Result<(), Box<dyn Error>> {
+    let config = config::get_config(get_config_path()?);
     let iroha_client: Client = Client::new(&config)?;
 
     initiate_block_listener(&iroha_client, 1)?;
@@ -25,7 +28,10 @@ fn non_zero_handler(number: u64) -> NonZeroU64 {
 /// iroha_client - Your iroha client implementation
 /// initial_block_number - The number of a block listener should start from.
 /// To get total quantity of blocks, you may use method iroha_client.get_status().
-fn initiate_block_listener(iroha_client: &Client, initial_block_number: u64) -> Result<(), Box<dyn std::error::Error>> {
+fn initiate_block_listener(
+    iroha_client: &Client,
+    initial_block_number: u64,
+) -> Result<(), Box<dyn Error>> {
     // Processing the non zero value from the u64
     let block_number = non_zero_handler(initial_block_number);
     // Initiating the block listener object
@@ -34,7 +40,7 @@ fn initiate_block_listener(iroha_client: &Client, initial_block_number: u64) -> 
     for block in block_iter {
         match &block {
             Ok(block) => println!("Received block: {}", block.payload().to_string()),
-            Err(e) => println!("Error happened: {}", e)
+            Err(e) => println!("Error happened: {}", e),
         }
     }
     Ok(())
