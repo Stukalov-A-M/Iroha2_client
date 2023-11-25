@@ -23,5 +23,5 @@ pub fn get_config_path() -> Result<PathBuf, Box<dyn Error>> {
 pub fn get_config(path_buf: PathBuf) -> Configuration {
     let file =
         File::open(&path_buf).unwrap_or_else(|_| panic!("Failed to read file at: {path_buf:?}"));
-    serde_json::from_reader(file).unwrap_or_else(|_| panic!("Failed to read config at ?????"))
+    serde_json::from_reader(file).unwrap_or_else(|_| panic!("Failed to serialise config"))
 }
