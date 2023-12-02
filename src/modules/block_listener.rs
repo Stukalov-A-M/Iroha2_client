@@ -1,6 +1,6 @@
-use std::error::Error;
-use iroha_client::client::Client;
 use crate::utils::non_zero_handler::*;
+use iroha_client::client::Client;
+use std::error::Error;
 
 /// A block listener configuration
 /// iroha_client - Your iroha client implementation
@@ -17,7 +17,7 @@ pub fn initiate_block_listener(
     // Initiating iteration by blocks. The iterator is infinite
     for block in block_iter {
         match &block {
-            Ok(block) => println!("Received block: {}", block.payload().to_string()),
+            Ok(block) => println!("Received block: {}", &block),
             Err(e) => println!("Error happened: {}", e),
         }
     }

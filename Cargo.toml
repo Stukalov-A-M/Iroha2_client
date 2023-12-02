@@ -6,10 +6,17 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+parity-scale-codec = "3.6.9"
+parity-scale-codec-derive = "3.6.9"
+soketto = "0.7.1"
 openssl = "0.10"
-iroha_client = { git = "https://github.com/hyperledger/iroha", branch = "iroha2-stable" }
-iroha_config = { git = "https://github.com/hyperledger/iroha", branch = "iroha2-stable" }
-iroha_data_model = { git = "https://github.com/hyperledger/iroha", branch = "iroha2-stable" }
-iroha_crypto = { git = "https://github.com/hyperledger/iroha", branch = "iroha2-stable" }
-iroha_primitives = { git = "https://github.com/hyperledger/iroha", branch = "iroha2-stable" }
-serde_json = "1.0.108"
+iroha_client = { path = "C:\\RustProjects\\iroha\\client"}
+iroha_config = { path = "C:\\RustProjects\\iroha\\config"}
+iroha_data_model = { path = "C:\\RustProjects\\iroha\\data_model"}
+iroha_crypto = { path = "C:\\RustProjects\\iroha\\crypto"}
+iroha_primitives = { path = "C:\\RustProjects\\iroha\\primitives"}
+serde_json = { version = "1.0.108", features = [] }
+tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
+futures = "0.3.29"
+serde = "1.0.193"
+httparse = "1.8.0"
