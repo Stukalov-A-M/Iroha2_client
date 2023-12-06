@@ -17,7 +17,7 @@ pub fn initiate_block_listener(
     // Initiating iteration by blocks. The iterator is infinite
     for block in block_iter {
         match &block {
-            Ok(block) => println!("Received block: {}", &block),
+            Ok(block) => println!("Received block: {}", block.payload().to_string()),
             Err(e) => println!("Error happened: {}", e),
         }
     }
