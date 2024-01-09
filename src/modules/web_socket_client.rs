@@ -1,12 +1,11 @@
-use std::error::Error;
+use crate::utils::non_zero_handler::non_zero_handler;
 use iroha_data_model::block::stream::{BlockMessage, BlockSubscriptionRequest};
 use parity_scale_codec::{DecodeAll, Encode};
-use websocket::{ClientBuilder, Message, OwnedMessage};
-use websocket::header::{Headers};
+use std::error::Error;
+use websocket::header::Headers;
 use websocket::native_tls::TlsConnector;
 use websocket::ws::dataframe::DataFrame;
-use crate::utils::non_zero_handler::non_zero_handler;
-
+use websocket::{ClientBuilder, Message, OwnedMessage};
 
 pub fn socket_init() -> Result<(), Box<dyn Error>> {
     let buf = b"Connection: Upgrade\n\
@@ -23,13 +22,13 @@ pub fn socket_init() -> Result<(), Box<dyn Error>> {
         .custom_headers(&headers)
         .connect(TlsConnector::new().ok())
         .unwrap();
-    let msg = Message::binary(BlockSubscriptionRequest::new(non_zero_handler(1)).encode()) ;
+    let msg = Message::binary(BlockSubscriptionRequest::new(non_zero_handler(1)).encode());
 
     let _request = client.send_message(&msg).unwrap();
     let mut response = OwnedMessage::from(client.recv_message().unwrap()).take_payload();
-    let rsp_msg = BlockMessage::decode_all(&mut response.as_slice()).unwrap();
+    //let rsp_msg = serde_json::to_string_pretty(&BlockMessage::decode_all(&mut response.as_slice()).unwrap()).unwrap();
 
-    println!("{:?}", rsp_msg);
+    //println!("{:?}", rsp_msg);
 
     Ok(())
 }
@@ -43,5 +42,3 @@ fn config_client () -> Box<[dyn Header<'static>]> {
 }
 
  */
-
-

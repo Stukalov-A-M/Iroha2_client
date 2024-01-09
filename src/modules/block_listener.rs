@@ -1,5 +1,6 @@
 use crate::utils::non_zero_handler::*;
 use iroha_client::client::Client;
+use parity_scale_codec::Encode;
 use std::error::Error;
 
 /// A block listener configuration
@@ -11,6 +12,9 @@ pub fn initiate_block_listener(
     initial_block_number: u64,
 ) -> Result<(), Box<dyn Error>> {
     // Processing the non zero value from the u64
+    let block_number = non_zero_handler(initial_block_number).encode();
+    println!("{:?}", block_number);
+    println!("{:02X?}", block_number);
     let block_number = non_zero_handler(initial_block_number);
     // Initiating the block listener object
     let block_iter = iroha_client.listen_for_blocks(block_number)?;
