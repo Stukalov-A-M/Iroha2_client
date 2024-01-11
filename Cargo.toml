@@ -11,11 +11,11 @@ parity-scale-codec = "3.6.9"
 parity-scale-codec-derive = "3.6.9"
 soketto = "0.7.1"
 openssl = "0.10"
-iroha_client = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-dev"}
-iroha_config = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-dev" }
-iroha_data_model = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-dev" }
-iroha_crypto = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-dev" }
-iroha_primitives = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-dev" }
+iroha_client = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable"}
+iroha_config = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
+iroha_data_model = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
+iroha_crypto = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
+iroha_primitives = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
 serde_json = { version = "1.0.108", features = [] }
 tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
 futures = "0.3.29"
