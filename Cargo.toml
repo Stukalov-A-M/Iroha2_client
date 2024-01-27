@@ -16,6 +16,7 @@ iroha_config = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2
 iroha_data_model = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
 iroha_crypto = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
 iroha_primitives = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
+iroha_executor = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
 serde_json = { version = "1.0.108", features = [] }
 tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
 futures = "0.3.29"

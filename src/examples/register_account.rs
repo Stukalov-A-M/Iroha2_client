@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let new_account = Account::new("alex@wonderland".parse()?, public_key);
     //And finally submit the transaction
     let tx = iroha_client.submit(RegisterExpr::new(new_account))?;
-    //Optional. To look at transaction hash
+    //Optional. To look at the transaction hash
     print!("{:?}", tx);
 
     Ok(())

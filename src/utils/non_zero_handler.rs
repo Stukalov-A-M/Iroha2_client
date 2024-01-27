@@ -1,6 +1,6 @@
 use std::num::NonZeroU64;
 
-pub fn _non_zero_handler(number: u64) -> NonZeroU64 {
+pub fn non_zero_handler(number: u64) -> NonZeroU64 {
     NonZeroU64::new(number).map_or_else(
         || {
             println!("The number must be > 0, using default value 1");

@@ -1,6 +1,6 @@
 use crate::utils::non_zero_handler::non_zero_handler;
-use iroha_data_model::block::stream::{BlockMessage, BlockSubscriptionRequest};
-use parity_scale_codec::{DecodeAll, Encode};
+use iroha_data_model::block::stream::BlockSubscriptionRequest;
+use parity_scale_codec::Encode;
 use std::error::Error;
 use websocket::header::Headers;
 use websocket::native_tls::TlsConnector;
@@ -25,7 +25,7 @@ pub fn socket_init() -> Result<(), Box<dyn Error>> {
     let msg = Message::binary(BlockSubscriptionRequest::new(non_zero_handler(1)).encode());
 
     let _request = client.send_message(&msg).unwrap();
-    let mut response = OwnedMessage::from(client.recv_message().unwrap()).take_payload();
+    let _response = OwnedMessage::from(client.recv_message().unwrap()).take_payload();
     //let rsp_msg = serde_json::to_string_pretty(&BlockMessage::decode_all(&mut response.as_slice()).unwrap()).unwrap();
 
     //println!("{:?}", rsp_msg);
