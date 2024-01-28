@@ -26,19 +26,7 @@ pub fn socket_init() -> Result<(), Box<dyn Error>> {
 
     let _request = client.send_message(&msg).unwrap();
     let _response = OwnedMessage::from(client.recv_message().unwrap()).take_payload();
-    //let rsp_msg = serde_json::to_string_pretty(&BlockMessage::decode_all(&mut response.as_slice()).unwrap()).unwrap();
-
-    //println!("{:?}", rsp_msg);
 
     Ok(())
 }
 
-/*
-fn config_client () -> Box<[dyn Header<'static>]> {
-
-
-
-    Box::from(headers)
-}
-
- */
