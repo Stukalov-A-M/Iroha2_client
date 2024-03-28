@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut file = File::open("C:\\RustProjects\\iroha_stable\\src\\resources\\mint_asset_for_created_user_trigger.wasm").unwrap();
     let mut buff = Vec::new();
     file.read_to_end(&mut buff).unwrap();
-/*
+
     let trigger_id = TriggerId::new("wonderland".parse().ok(), "mint_asset_for_created_user_trigger_1".parse().ok().unwrap());
 
     let register_trigger =
@@ -47,7 +47,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                         BySome(AccountEventFilter::ByCreated)))))))));
     iroha_client.submit_blocking(register_trigger).unwrap();
 
- */
+
 
 
 
