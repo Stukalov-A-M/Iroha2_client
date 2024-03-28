@@ -3,6 +3,9 @@ pub mod database;
 pub mod models;
 pub mod schema;
 mod utils;
+pub mod database;
+pub mod models;
+pub mod schema;
 
 pub mod client {
     use crate::config::*;
