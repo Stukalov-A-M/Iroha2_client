@@ -1,5 +1,8 @@
 mod config;
 mod utils;
+pub mod database;
+pub mod models;
+pub mod schema;
 
 pub mod client {
     use crate::config::*;
@@ -130,5 +133,32 @@ pub mod asset {
         get_client()
             .submit_blocking(MintExpr::new(asset_quantity, asset_id))
             .unwrap()
+    }
+}
+
+pub mod queries {
+    use crate::client::get_client;
+    use iroha_client::client::{Client, ResultSet};
+    use iroha_data_model::account::Account;
+    use iroha_data_model::asset::AssetDefinition;
+    use iroha_data_model::query::account::model::FindAllAccounts;
+    use iroha_data_model::query::asset::model::FindAllAssetsDefinitions;
+
+    pub fn get_all_accounts() {
+        let iroha_client: Client = get_client();
+        let result: ResultSet<Account> = iroha_client.request(FindAllAccounts).unwrap();
+
+        for account in result {
+            println!("AccountName = {}", account.as_ref().unwrap())
+        }
+    }
+    pub fn get_all_asset_definitions() {
+        let iroha_client: Client = get_client();
+        let result: ResultSet<AssetDefinition> =
+            iroha_client.request(FindAllAssetsDefinitions).unwrap();
+
+        for asset_definition in result {
+            println!("AssetDefinition = {}", asset_definition.as_ref().unwrap())
+        }
     }
 }

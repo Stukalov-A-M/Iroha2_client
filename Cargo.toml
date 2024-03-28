@@ -18,11 +18,13 @@ iroha_crypto = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2
 iroha_primitives = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
 iroha_executor = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
 serde_json = { version = "1.0.108", features = [] }
-tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
+tokio = { version = "1.36.0", features = ["rt", "rt-multi-thread", "macros"] }
 futures = "0.3.29"
 serde = "1.0.193"
 httparse = "1.8.0"
 attohttpc = "0.26.1"
+diesel = { version = "2.1.5", features = ["postgres"] }
+dotenv = "0.15.0"
 
 [patch.crates-io]
 eyre = { git = "https://github.com/eyre-rs/eyre", tag = "v0.6.8" }

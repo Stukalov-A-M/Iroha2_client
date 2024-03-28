@@ -29,4 +29,3 @@ pub fn socket_init() -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
-
