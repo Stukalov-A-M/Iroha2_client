@@ -3,9 +3,6 @@ pub mod database;
 pub mod models;
 pub mod schema;
 mod utils;
-pub mod database;
-pub mod models;
-pub mod schema;
 
 pub mod client {
     use crate::config::*;
@@ -40,7 +37,7 @@ pub mod block_listener {
         // Initiating iteration by blocks. The iterator is infinite
         for block in block_iter {
             match &block {
-                Ok(block) => println!("Received block: {}", block.payload().to_string()),
+                Ok(block) => println!("Received block: {}", block.payload()),
                 Err(e) => println!("Error happened: {}", e),
             }
         }
