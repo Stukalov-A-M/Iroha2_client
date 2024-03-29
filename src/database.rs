@@ -1,4 +1,3 @@
-use super::*;
 use diesel::prelude::*;
 
 mod connection {
@@ -17,14 +16,15 @@ mod connection {
 
 pub mod queries {
     use crate::database::connection::establish_connection;
-    use crate::models::Users;
-    use crate::schema::users::dsl::users;
+    use crate::models::{NewUser, Users};
+    use crate::schema::users;
     use diesel::query_dsl::select_dsl::SelectDsl;
-    use diesel::{RunQueryDsl, SelectableHelper};
+    use diesel::{insert_into, Insertable, RunQueryDsl, SelectableHelper};
 
     pub fn print_all_users() {
+
         let mut connection = establish_connection();
-        let result = users
+        let result = users::table
             .select(Users::as_select())
             .load(&mut connection)
             .unwrap();
@@ -32,5 +32,21 @@ pub mod queries {
         for user in result {
             println!("{:?}", user)
         }
+    }
+
+    pub fn add_user(name: String, publicKey: String, privateKey: String) {
+        let mut connection = establish_connection();
+        let user = NewUser {
+            name,
+            publicKey,
+            privateKey,
+        };
+
+        let result = insert_into(users::table)
+            .values(user)
+            .returning(Users::as_returning())
+            .get_result(&mut connection)
+            .unwrap();
+        println!("{result}")
     }
 }

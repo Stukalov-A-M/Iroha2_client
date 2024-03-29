@@ -12,5 +12,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     println!("-------");
     queries::print_all_users();
 
+    queries::add_user("Artem".to_string(), "123".to_string(), "456".to_string());
+
     Ok(())
 }

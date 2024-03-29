@@ -1,5 +1,6 @@
 diesel::table! {
-    users (name) {
+    users  {
+        id -> Integer,
         name -> Text,
         publicKey -> Text,
         privateKey -> Text,
