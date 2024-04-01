@@ -1,3 +1,5 @@
+#![feature(error_reporter)]
+
 mod config;
 pub mod database;
 pub mod models;
@@ -35,30 +37,51 @@ pub mod block_listener {
         // Initiating the block listener object
         let block_iter = iroha_client.listen_for_blocks(block_number).unwrap();
         // Initiating iteration by blocks. The iterator is infinite
-        for block in block_iter {
-            match &block {
-                Ok(block) => println!("Received block: {}", block.payload()),
-                Err(e) => println!("Error happened: {}", e),
-            }
-        }
+        block_iter.for_each(|block| match block {
+            Ok(block) => println!("Received block: {}", block.payload()),
+            Err(e) => println!("Error happened: {}", e),
+        });
         Ok(())
     }
 }
 pub mod account {
     use crate::client::get_client;
+    use crate::database::queries::add_user;
+    use crate::models::NewUser;
+    use eyre::Report;
     use iroha_crypto::{HashOf, KeyPair};
-    use iroha_data_model::prelude::{Account, RegisterExpr, TransactionPayload};
+    use iroha_data_model::prelude::{
+        Account, AccountId, RegisterExpr, TransactionPayload, UnregisterExpr,
+    };
+    use std::str::FromStr;
 
-    pub fn register_new_account(account_id: &str) -> HashOf<TransactionPayload> {
-        //Creating a key pair for a new account
-        //The key pair must be given to the new account owner
+    pub fn register_new_account(account_id: AccountId) -> HashOf<TransactionPayload> {
         let key_pair = KeyPair::generate().unwrap();
-        //Now you can execute public|private keys by using functions of key_pair variable
         let public_key = vec![key_pair.public_key().clone()];
-        //Creating a NewAccount type
-        let new_account = Account::new(account_id.parse().unwrap(), public_key);
-        //And finally submit the transaction
-        get_client().submit(RegisterExpr::new(new_account)).unwrap()
+
+        let new_account = Account::new(account_id.clone(), public_key);
+
+        let user = NewUser {
+            name: account_id.to_string(),
+            publicKey: key_pair.public_key().to_string(),
+            privateKey: key_pair.private_key().to_string(),
+        };
+
+        add_user(user);
+
+        get_client()
+            .submit_blocking(RegisterExpr::new(new_account))
+            .unwrap()
+    }
+
+    pub fn unregister_account(account_id: AccountId) -> Result<(), Report> {
+        match get_client().submit_blocking(UnregisterExpr::new(account_id.clone())) {
+            Ok(..) => {
+                println!("{} is unregistered", account_id);
+                Ok(())
+            }
+            Err(e) => Err(e),
+        }
     }
 }
 pub mod asset {
@@ -148,17 +171,15 @@ pub mod queries {
         let iroha_client: Client = get_client();
         let result: ResultSet<Account> = iroha_client.request(FindAllAccounts).unwrap();
 
-        for account in result {
-            println!("AccountName = {}", account.as_ref().unwrap())
-        }
+        result.for_each(|account| println!("AccountName = {}", account.unwrap()));
     }
     pub fn get_all_asset_definitions() {
         let iroha_client: Client = get_client();
         let result: ResultSet<AssetDefinition> =
             iroha_client.request(FindAllAssetsDefinitions).unwrap();
 
-        for asset_definition in result {
-            println!("AssetDefinition = {}", asset_definition.as_ref().unwrap())
-        }
+        result.for_each(|asset_definition| {
+            println!("AssetDefinition = {}", asset_definition.unwrap())
+        });
     }
 }

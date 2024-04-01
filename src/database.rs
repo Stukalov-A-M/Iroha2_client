@@ -14,6 +14,7 @@ mod connection {
     }
 }
 
+#[allow(non_snake_case)]
 pub mod queries {
     use crate::database::connection::establish_connection;
     use crate::models::{NewUser, Users};
@@ -22,25 +23,17 @@ pub mod queries {
     use diesel::{insert_into, Insertable, RunQueryDsl, SelectableHelper};
 
     pub fn print_all_users() {
-
         let mut connection = establish_connection();
         let result = users::table
             .select(Users::as_select())
             .load(&mut connection)
             .unwrap();
 
-        for user in result {
-            println!("{:?}", user)
-        }
+        result.iter().for_each(|user| println!("{user}"))
     }
 
-    pub fn add_user(name: String, publicKey: String, privateKey: String) {
+    pub fn add_user(user: NewUser) {
         let mut connection = establish_connection();
-        let user = NewUser {
-            name,
-            publicKey,
-            privateKey,
-        };
 
         let result = insert_into(users::table)
             .values(user)

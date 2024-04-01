@@ -25,6 +25,7 @@ httparse = "1.8.0"
 attohttpc = "0.26.1"
 diesel = { version = "2.1.5", features = ["postgres"] }
 dotenv = "0.15.0"
+eyre = "0.6.12"
 
 [patch.crates-io]
 eyre = { git = "https://github.com/eyre-rs/eyre", tag = "v0.6.8" }

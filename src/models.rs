@@ -1,5 +1,5 @@
-use std::fmt::{Display, Formatter};
 use diesel::prelude::*;
+use std::fmt::{Display, Formatter};
 
 #[derive(Queryable, Selectable, Debug)]
 #[diesel(table_name = crate::schema::users)]
@@ -24,6 +24,10 @@ pub struct NewUser {
 
 impl Display for Users {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}, {}, {}, {}", &self.id, &self.name, &self.publicKey, &self.privateKey)
+        write!(
+            f,
+            "{{ id = {}, name = {}, publicKey = {}, privateKey = {} }}",
+            &self.id, &self.name, &self.publicKey, &self.privateKey
+        )
     }
 }
