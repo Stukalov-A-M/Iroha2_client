@@ -6,10 +6,11 @@ use std::str::FromStr;
 /// Mint 1 rose for owner
 #[iroha_trigger::main]
 fn main(_id: TriggerId, _owner: AccountId, event: Event) {
-    let account_id = if let Event::ExecuteTrigger(event) = event {
-        event.authority().clone()
-    } else {
-        return;
+
+    let account_id = match event {
+        Event::ExecuteTrigger(event) => event.authority().clone(),
+        _=> return
+
     };
 
     let account: Account = QueryBox::FindAccountById(FindAccountById::new(account_id))
@@ -19,7 +20,7 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
         .unwrap();
 
     // Transaction construction
-    let (instructions, asset, asset_value, d_account) = (
+    let (instructions, asset, asset_value, dest_account) = (
         Name::from_str("instructions").unwrap(),
         Name::from_str("asset").unwrap(),
         Name::from_str("assetValue").unwrap(),
@@ -28,32 +29,25 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
 
     let asset_id: AssetId;
     let transfer_amount: Fixed;
-    let dest_account: AccountId;
+    let destination_account: AccountId;
 
-    if let Some(Value::LimitedMetadata(instructions)) = account.metadata().get(&instructions) {
-        if instructions.iter().len() == 3 {
-            if let Some(Value::Id(IdBox::AssetId(id))) = instructions.get(&asset) {
-                asset_id = id.clone()
-            } else {
-                return;
+    match account.metadata().get(&instructions) {
+        Some(Value::LimitedMetadata(instructions)) if instructions.iter().len() == 3 => {
+            asset_id = match instructions.get(&asset) {
+                Some(Value::Id(IdBox::AssetId(id))) => id.clone(),
+                _ => return,
             };
-            if let Some(Value::Numeric(NumericValue::Fixed(value))) = instructions.get(&asset_value)
-            {
-                transfer_amount = value.clone();
-            } else {
-                return;
+            transfer_amount = match instructions.get(&asset_value) {
+                Some(Value::Numeric(NumericValue::Fixed(value))) => value.clone(),
+                _ => return,
             };
-            if let Some(Value::Id(IdBox::AccountId(id))) = instructions.get(&d_account) {
-                dest_account = id.clone()
-            } else {
-                return;
+            destination_account = match instructions.get(&dest_account) {
+                Some(Value::Id(IdBox::AccountId(id))) => id.clone(),
+                _ => return,
             };
-        } else {
-            return;
-        };
-    } else {
-        return;
-    };
+        }
+        _ => return,
+    }
 
     // Overdraft processing
 
