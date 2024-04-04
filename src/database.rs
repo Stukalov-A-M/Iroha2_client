@@ -20,7 +20,7 @@ pub mod queries {
     use crate::models::{NewUser, Users};
     use crate::schema::users;
     use diesel::query_dsl::select_dsl::SelectDsl;
-    use diesel::{insert_into, Insertable, RunQueryDsl, SelectableHelper};
+    use diesel::{insert_into, RunQueryDsl, SelectableHelper};
 
     pub fn print_all_users() {
         let mut connection = establish_connection();

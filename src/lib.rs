@@ -1,4 +1,5 @@
 #![feature(error_reporter)]
+#![feature(exact_size_is_empty)]
 
 mod config;
 pub mod database;
@@ -87,11 +88,9 @@ pub mod account {
 pub mod asset {
     use crate::client::get_client;
     use iroha_crypto::HashOf;
-    use iroha_data_model::prelude::{
-        AccountId, Asset, AssetDefinition, AssetDefinitionId, AssetId, AssetValueType, MintExpr,
-        RegisterExpr, TransactionPayload,
-    };
+    use iroha_data_model::prelude::{AccountId, Asset, AssetDefinition, AssetDefinitionId, AssetId, AssetValue, AssetValueType, MintExpr, RegisterExpr, TransactionPayload};
     use std::str::FromStr;
+    use iroha_data_model::NumericValue;
 
     pub fn register_asset_definitions(asset_definition_id: &str) -> HashOf<TransactionPayload> {
         let asset_definition_id = AssetDefinitionId::from_str(asset_definition_id).unwrap();
@@ -134,27 +133,22 @@ pub mod asset {
     }
 
     pub fn mint_asset(
-        asset_definition_id: &str,
-        account_id: &str,
-        quantity: u32,
+        asset_definition_id: AssetDefinitionId,
+        account_id: AccountId,
+        quantity: NumericValue,
     ) -> HashOf<TransactionPayload> {
-        //Precondition: The asset definition was registered
-        // First we need to define the asset definition id
-        let asset_definition_id = AssetDefinitionId::from_str(asset_definition_id).unwrap();
 
         //Then we need to create an assetId object
         //The AssetId is a complex object which consists of asset definition id and account id
         let asset_id: AssetId = AssetId::new(
             asset_definition_id,
-            AccountId::from_str(account_id).unwrap(),
+            account_id,
         );
 
-        //Now we need to define the asset quantity regarding to the asset's value type
-        let asset_quantity = quantity;
 
         //And finally we need to send the transaction
         get_client()
-            .submit_blocking(MintExpr::new(asset_quantity, asset_id))
+            .submit_blocking(MintExpr::new(quantity, asset_id))
             .unwrap()
     }
 }
@@ -167,11 +161,17 @@ pub mod queries {
     use iroha_data_model::query::account::model::FindAllAccounts;
     use iroha_data_model::query::asset::model::FindAllAssetsDefinitions;
 
-    pub fn get_all_accounts() {
+    pub fn get_all_accounts() -> ResultSet<Account> {
         let iroha_client: Client = get_client();
         let result: ResultSet<Account> = iroha_client.request(FindAllAccounts).unwrap();
 
-        result.for_each(|account| println!("AccountName = {}", account.unwrap()));
+        result.clone().for_each(|account| println!("AccountName = {}", account.unwrap()));
+        result
+    }
+
+    pub fn print_all_accounts_with_assets() {
+        let accounts = get_all_accounts();
+        accounts.filter(|account| !account.as_ref().unwrap().assets().is_empty()).for_each(|account|println!("{}", account.unwrap()));
     }
     pub fn get_all_asset_definitions() {
         let iroha_client: Client = get_client();
@@ -181,5 +181,22 @@ pub mod queries {
         result.for_each(|asset_definition| {
             println!("AssetDefinition = {}", asset_definition.unwrap())
         });
+    }
+}
+pub mod domain {
+    use iroha_client::client::ResultSet;
+    use iroha_crypto::HashOf;
+    use iroha_data_model::prelude::{Domain, DomainId, RegisterExpr, TransactionPayload};
+    use iroha_data_model::query::domain::model::FindAllDomains;
+    use crate::client::get_client;
+
+    pub fn register_domain(name: &str) -> HashOf<TransactionPayload> {
+        get_client().submit_blocking(RegisterExpr::new(Domain::new(name.parse().unwrap()))).unwrap()
+    }
+
+    pub fn print_all_domains() {
+        let result: ResultSet<Domain> = get_client().request(FindAllDomains).unwrap();
+
+        result.into_iter().for_each(|domain| println!("Domain = {}", domain.unwrap()))
     }
 }

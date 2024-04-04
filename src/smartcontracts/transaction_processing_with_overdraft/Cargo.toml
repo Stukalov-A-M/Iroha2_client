@@ -1,0 +1,8 @@
+[package]
+name = "transaction_processing_with_overdraft"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+iroha_trigger = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
+lol_alloc = "0.4.1"
