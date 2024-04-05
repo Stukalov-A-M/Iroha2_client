@@ -35,7 +35,7 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
                 _ => return,
             };
             transferred_amount = match instructions.get(&asset_value) {
-                Some(Value::Numeric(NumericValue::Fixed(value))) => value.clone(),
+                Some(Value::Numeric(NumericValue::Fixed(value))) => *value,
                 _ => return,
             };
             destination_account = match instructions.get(&dest_account) {
@@ -65,7 +65,7 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
             _ => None,
         })
         .and_then(|overdraft| match overdraft.get(&available_amount) {
-            Some(Value::Numeric(NumericValue::Fixed(fixed_amount))) => Some(fixed_amount.clone()),
+            Some(Value::Numeric(NumericValue::Fixed(fixed_amount))) => Some(*fixed_amount),
             _ => None,
         })
         .unwrap_or(Fixed::ZERO);
@@ -74,10 +74,9 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
 
     let source_account_asset_amount =
         match source_account.asset(&asset_id).map(|asset| asset.value()) {
-            Some(AssetValue::Fixed(fixed_amount)) => fixed_amount.clone(),
+            Some(AssetValue::Fixed(fixed_amount)) => *fixed_amount,
             _ => return,
         };
-
 
     let minted_amount = transferred_amount
         .checked_sub(source_account_asset_amount)
