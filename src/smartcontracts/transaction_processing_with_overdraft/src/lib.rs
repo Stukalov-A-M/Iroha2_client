@@ -1,7 +1,8 @@
 use iroha_trigger::prelude::*;
 use std::str::FromStr;
 
-/// Mint 1 rose for owner
+/// Makes transfer asset and mints asset if overdraft is available
+/// and account doesn't have enough asset value for transfer
 #[iroha_trigger::main]
 fn main(_id: TriggerId, _owner: AccountId, event: Event) {
     let source_account_id = match event {
