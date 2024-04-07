@@ -1,4 +1,3 @@
-use diesel::prelude::*;
 
 mod connection {
     use diesel::{Connection, PgConnection};

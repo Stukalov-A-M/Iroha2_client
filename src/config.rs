@@ -21,7 +21,6 @@ pub fn get_config_path() -> Result<PathBuf, Box<dyn Error>> {
     Err(Box::try_from("The source directory was not found in the ancestor path.").unwrap())
 }
 pub fn get_config(path_buf: PathBuf) -> Configuration {
-    let file =
-        File::open(&path_buf).expect("Failed to open file");
+    let file = File::open(&path_buf).expect("Failed to open file");
     serde_json::from_reader(file).expect("Failed to serialise config")
 }

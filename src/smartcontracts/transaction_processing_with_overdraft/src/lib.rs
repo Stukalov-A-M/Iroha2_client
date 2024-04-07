@@ -1,5 +1,16 @@
+#![no_std]
+
+extern crate alloc;
+#[cfg(not(test))]
+extern crate panic_halt;
+
+use lol_alloc::{FreeListAllocator, LockedAllocator};
+
+#[global_allocator]
+static ALLOC: LockedAllocator<FreeListAllocator> = LockedAllocator::new(FreeListAllocator::new());
+
+use core::str::FromStr;
 use iroha_trigger::prelude::*;
-use std::str::FromStr;
 
 /// Makes transfer asset and mints asset if overdraft is available
 /// and account doesn't have enough asset value for transfer

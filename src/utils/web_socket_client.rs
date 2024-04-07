@@ -7,7 +7,7 @@ use websocket::native_tls::TlsConnector;
 use websocket::ws::dataframe::DataFrame;
 use websocket::{ClientBuilder, Message, OwnedMessage};
 
-pub fn socket_init() -> Result<(), Box<dyn Error>> {
+pub fn _socket_init() -> Result<(), Box<dyn Error>> {
     let buf = b"Connection: Upgrade\n\
     Upgrade: websocket\n\
     Sec-WebSocket-Version: 13\n\

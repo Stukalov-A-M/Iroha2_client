@@ -54,7 +54,6 @@ pub mod account {
     use iroha_data_model::prelude::{
         Account, AccountId, RegisterExpr, TransactionPayload, UnregisterExpr,
     };
-    use std::str::FromStr;
 
     pub fn register_new_account(account_id: AccountId) -> HashOf<TransactionPayload> {
         let key_pair = KeyPair::generate().unwrap();
@@ -88,9 +87,12 @@ pub mod account {
 pub mod asset {
     use crate::client::get_client;
     use iroha_crypto::HashOf;
-    use iroha_data_model::prelude::{AccountId, Asset, AssetDefinition, AssetDefinitionId, AssetId, AssetValue, AssetValueType, MintExpr, RegisterExpr, TransactionPayload};
-    use std::str::FromStr;
+    use iroha_data_model::prelude::{
+        AccountId, Asset, AssetDefinition, AssetDefinitionId, AssetId, AssetValueType,
+        MintExpr, RegisterExpr, TransactionPayload,
+    };
     use iroha_data_model::NumericValue;
+    use std::str::FromStr;
 
     pub fn register_asset_definitions(asset_definition_id: &str) -> HashOf<TransactionPayload> {
         let asset_definition_id = AssetDefinitionId::from_str(asset_definition_id).unwrap();
@@ -137,14 +139,9 @@ pub mod asset {
         account_id: AccountId,
         quantity: NumericValue,
     ) -> HashOf<TransactionPayload> {
-
         //Then we need to create an assetId object
         //The AssetId is a complex object which consists of asset definition id and account id
-        let asset_id: AssetId = AssetId::new(
-            asset_definition_id,
-            account_id,
-        );
-
+        let asset_id: AssetId = AssetId::new(asset_definition_id, account_id);
 
         //And finally we need to send the transaction
         get_client()
@@ -164,14 +161,17 @@ pub mod queries {
     pub fn get_all_accounts() -> ResultSet<Account> {
         let iroha_client: Client = get_client();
         let result: ResultSet<Account> = iroha_client.request(FindAllAccounts).unwrap();
-
-        result.clone().for_each(|account| println!("AccountName = {}", account.unwrap()));
         result
     }
 
     pub fn print_all_accounts_with_assets() {
-        let accounts = get_all_accounts();
-        accounts.filter(|account| !account.as_ref().unwrap().assets().is_empty()).for_each(|account|println!("{}", account.unwrap()));
+        let accounts =
+            get_all_accounts().filter(|account| !account.as_ref().unwrap().assets().is_empty());
+        for account in accounts {
+            for asset in account.as_ref().unwrap().assets() {
+                println!("Account = {}, Asset = {}", account.as_ref().unwrap(), asset)
+            }
+        }
     }
     pub fn get_all_asset_definitions() {
         let iroha_client: Client = get_client();
@@ -184,19 +184,34 @@ pub mod queries {
     }
 }
 pub mod domain {
+    use crate::client::get_client;
     use iroha_client::client::ResultSet;
     use iroha_crypto::HashOf;
-    use iroha_data_model::prelude::{Domain, DomainId, RegisterExpr, TransactionPayload};
+    use iroha_data_model::prelude::{Domain, RegisterExpr, TransactionPayload};
     use iroha_data_model::query::domain::model::FindAllDomains;
-    use crate::client::get_client;
 
     pub fn register_domain(name: &str) -> HashOf<TransactionPayload> {
-        get_client().submit_blocking(RegisterExpr::new(Domain::new(name.parse().unwrap()))).unwrap()
+        get_client()
+            .submit_blocking(RegisterExpr::new(Domain::new(name.parse().unwrap())))
+            .unwrap()
     }
 
     pub fn print_all_domains() {
         let result: ResultSet<Domain> = get_client().request(FindAllDomains).unwrap();
 
-        result.into_iter().for_each(|domain| println!("Domain = {}", domain.unwrap()))
+        result
+            .into_iter()
+            .for_each(|domain| println!("Domain = {}", domain.unwrap()))
+    }
+}
+pub mod trigger {
+    use crate::client::get_client;
+    use iroha_data_model::prelude::{FindAllActiveTriggerIds};
+
+    pub fn print_all_registered_triggers() {
+        let result = get_client().request(FindAllActiveTriggerIds).unwrap();
+        result
+            .into_iter()
+            .for_each(|trigger_id| println!("Active trigger = {}", trigger_id.unwrap()))
     }
 }

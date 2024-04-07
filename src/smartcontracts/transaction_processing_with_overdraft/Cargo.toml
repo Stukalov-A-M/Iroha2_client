@@ -1,8 +1,27 @@
 [package]
 name = "transaction_processing_with_overdraft"
 version = "0.1.0"
+authors = ["https://github.com/Stukalov-A-M"]
 edition = "2021"
 
+[lib]
+# Smartcontract should be linked dynamically so that it may link to functions exported
+# from the host environment. Also, host environment executes the smartcontract by
+# calling the function which smartcontract exports(entry point of execution)
+crate-type = ['cdylib']
+
+# Empty workspace to fix "current package believes it's in a workspace when it's not"
+[workspace]
+
+[profile.release]
+strip = "debuginfo" # Remove debugging info from the binary
+panic = "abort"     # Panics are transcribed to Traps when compiling for wasm anyways
+lto = true          # Link-time-optimization produces notable decrease in binary size
+opt-level = "z"     # Optimize for size vs speed with "s"/"z"(removes vectorization)
+codegen-units = 1   # Further reduces binary size but increases compilation time
+
 [dependencies]
-iroha_trigger = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable" }
-lol_alloc = "0.4.1"
+iroha_trigger = { git = "https://github.com/hyperledger/iroha/", branch = "iroha2-stable", features = ["debug"] }
+
+lol_alloc = { version = "0.4.0"}
+panic-halt = "0.2.0"
