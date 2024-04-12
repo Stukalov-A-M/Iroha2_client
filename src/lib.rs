@@ -88,8 +88,8 @@ pub mod asset {
     use crate::client::get_client;
     use iroha_crypto::HashOf;
     use iroha_data_model::prelude::{
-        AccountId, Asset, AssetDefinition, AssetDefinitionId, AssetId, AssetValueType,
-        MintExpr, RegisterExpr, TransactionPayload,
+        AccountId, Asset, AssetDefinition, AssetDefinitionId, AssetId, AssetValueType, MintExpr,
+        RegisterExpr, TransactionPayload,
     };
     use iroha_data_model::NumericValue;
     use std::str::FromStr;
@@ -206,7 +206,7 @@ pub mod domain {
 }
 pub mod trigger {
     use crate::client::get_client;
-    use iroha_data_model::prelude::{FindAllActiveTriggerIds};
+    use iroha_data_model::prelude::FindAllActiveTriggerIds;
 
     pub fn print_all_registered_triggers() {
         let result = get_client().request(FindAllActiveTriggerIds).unwrap();

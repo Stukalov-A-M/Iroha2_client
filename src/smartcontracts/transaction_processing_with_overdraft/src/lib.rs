@@ -24,16 +24,16 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
     let source_account: Account =
         QueryBox::FindAccountById(FindAccountById::new(source_account_id.clone()))
             .execute()
-            .unwrap()
+            .dbg_unwrap()
             .try_into()
-            .unwrap();
+            .dbg_unwrap();
 
     // Instructions deconstruction
     let (instructions, asset, asset_value, dest_account) = (
-        Name::from_str("instructions").unwrap(),
-        Name::from_str("asset").unwrap(),
-        Name::from_str("assetValue").unwrap(),
-        Name::from_str("destAccount").unwrap(),
+        Name::from_str("instructions").dbg_unwrap(),
+        Name::from_str("asset").dbg_unwrap(),
+        Name::from_str("assetValue").dbg_unwrap(),
+        Name::from_str("destAccount").dbg_unwrap(),
     );
 
     let asset_id: AssetId;
@@ -60,9 +60,9 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
 
     // Overdraft processing
     let (overdraft, available, available_amount) = (
-        Name::from_str("overdraft").unwrap(),
-        Name::from_str("available").unwrap(),
-        Name::from_str("available_amount").unwrap(),
+        Name::from_str("overdraft").dbg_unwrap(),
+        Name::from_str("available").dbg_unwrap(),
+        Name::from_str("available_amount").dbg_unwrap(),
     );
 
     let available_overdraft_amount: Fixed = source_account
@@ -83,7 +83,6 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
         .unwrap_or(Fixed::ZERO);
 
     //Transfer expression construction
-
     let source_account_asset_amount =
         match source_account.asset(&asset_id).map(|asset| asset.value()) {
             Some(AssetValue::Fixed(fixed_amount)) => *fixed_amount,
@@ -95,12 +94,12 @@ fn main(_id: TriggerId, _owner: AccountId, event: Event) {
         .unwrap_or(Fixed::ZERO);
 
     if minted_amount > Fixed::ZERO && available_overdraft_amount >= minted_amount {
-        MintExpr::new(minted_amount, source_account_id)
+        MintExpr::new(minted_amount, asset_id.clone())
             .execute()
-            .unwrap()
+            .dbg_unwrap()
     }
 
     TransferExpr::new(asset_id, transferred_amount, destination_account)
         .execute()
-        .unwrap()
+        .dbg_unwrap()
 }

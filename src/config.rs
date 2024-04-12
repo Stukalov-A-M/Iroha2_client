@@ -14,7 +14,7 @@ pub fn get_config_path() -> Result<PathBuf, Box<dyn Error>> {
             let mut config_path = PathBuf::from(source_path.parent().unwrap());
             config_path.push("src");
             config_path.push("resources");
-            config_path.push("config.json");
+            config_path.push("artem_first.json");
             return Ok(config_path);
         }
     }

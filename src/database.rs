@@ -1,4 +1,3 @@
-
 mod connection {
     use diesel::{Connection, PgConnection};
     use dotenv::dotenv;
