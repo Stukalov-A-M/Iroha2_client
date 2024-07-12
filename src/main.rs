@@ -4,7 +4,7 @@ use core::str::FromStr;
 use iroha_client::client::{Client, QueryOutput, ResultSet};
 use iroha_data_model::account::{Account, AccountId};
 use iroha_data_model::asset::{AssetDefinition, AssetId};
-use iroha_data_model::isi::{SetKeyValueExpr, UnregisterExpr};
+use iroha_data_model::isi::{InstructionExpr, SetKeyValueExpr, UnregisterExpr};
 use iroha_data_model::name::Name;
 use iroha_data_model::prelude::{Action, ExecuteTriggerEventFilter, ExecuteTriggerExpr, GrantExpr, Metadata, MetadataLimits, RegisterExpr, RemoveKeyValueExpr, Repeats, Trigger, TriggerId, TriggeringFilterBox, WasmSmartContract};
 use iroha_data_model::{HasMetadata, NumericValue, Value};
@@ -14,6 +14,7 @@ use iroha_stable::queries::{get_all_accounts, print_all_accounts_with_assets};
 use std::error::Error;
 use std::fs::File;
 use std::io::Read;
+use iroha_data_model::IdentifiableBox::Asset;
 use iroha_data_model::permission::PermissionToken;
 use iroha_data_model::query::permission::model::FindPermissionTokensByAccountId;
 use serde_json::json;
@@ -25,6 +26,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let status = iroha_client.get_status()?;
     println!("{:?}", status);
 
+
+
 /*
     let metadata = Name::from_str("metadata").unwrap();
     let test_account: AccountId = "artem@first".parse().unwrap();
@@ -34,7 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 */
 
-
+/*
 
     let test_account: AccountId = "artem@first".parse().unwrap();
     let test_asset: AssetId = "eur#cbdc#admin@cbdc".parse().unwrap();
@@ -55,7 +58,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 
     //unregister_trigger();
-    //register_trigger();
+    register_trigger();
 
 
 
@@ -149,9 +152,12 @@ fn register_trigger() {
 
 
 
+
+
+ */
     Ok(())
 }
-
+/*
 fn account_metadata_configuration(
     account_id: AccountId,
     asset_id: AssetId,
@@ -208,3 +214,5 @@ fn account_metadata_configuration(
         .submit_all_blocking(vec![SetKeyValueExpr::new(account_id.clone(), instructions, instructions_metadata), SetKeyValueExpr::new(account_id, overdraft, overdraft_metadata)])
         .unwrap();
 }
+
+ */

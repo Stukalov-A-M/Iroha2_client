@@ -1,0 +1,12 @@
+[package]
+name = "smart_test"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ['cdylib']
+
+[dependencies]
+iroha_trigger = { git = "https://github.com/hyperledger/iroha", branch = "stable" }
+lol_alloc = "0.4.1"
+panic-halt = "0.2.0"
