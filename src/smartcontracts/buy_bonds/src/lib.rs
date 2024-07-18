@@ -104,8 +104,16 @@ fn trigger_entry_point(_id: TriggerId, owner: AccountId, event: Event) {
 
     let seller_bonds_asset_id = AssetId::new(bond_asset_definition_id, owner.clone());
 
-    if !are_assets_enough(buyer_money_asset_id.clone(), &transaction_amount, seller_bonds_asset_id.clone(), &bonds_quantity) {return;}
+    if !are_assets_enough(
+        buyer_money_asset_id.clone(),
+        &transaction_amount,
+        seller_bonds_asset_id.clone(),
+        &bonds_quantity,
+    ) {
+        return;
+    }
 
+    /// ToDo: Create ticket for implementation "execute_all()"
     // Send money from buyer to seller
     // and then send bonds from seller to buyer
     InstructionExpr::Transfer(TransferExpr::new(
